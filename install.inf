@@ -9,7 +9,7 @@ homepage=https://github.com/halfbrained/cuda_code_tree_x
 section=events
 events=on_state,on_state_ed
 
-[item60]
+[disabled_item10]
 section=commands
 caption=Code-Tree Bookmarks\Config
 method=config

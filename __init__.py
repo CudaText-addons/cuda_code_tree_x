@@ -25,7 +25,7 @@ class Command:
     def __init__(self):
         global opt_fn_icon
 
-        opt_fn_icon = ini_read(fn_config, CFG_SECTION, 'icon', opt_fn_icon)
+        #opt_fn_icon = ini_read(fn_config, CFG_SECTION, 'icon', opt_fn_icon)
 
         self.h_tree = app_proc(PROC_GET_CODETREE, '')
         self._bm_im_ind = None
@@ -35,7 +35,7 @@ class Command:
         self._bm_im_ind = imagelist_proc(h_im, IMAGELIST_ADD, opt_fn_icon)
 
     def config(self):
-        ini_write(fn_config, CFG_SECTION, 'icon', opt_fn_icon)
+        #ini_write(fn_config, CFG_SECTION, 'icon', opt_fn_icon)
         file_open(fn_config)
 
     def on_state(self, ed_self, state):

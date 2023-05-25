@@ -1,0 +1,2 @@
+2023.05.25
+* removed option 'icon', since full path of icon is bad in sync'ed CudaText config on 2 PCs
