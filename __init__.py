@@ -94,7 +94,8 @@ class Command:
         # add gathered bookmarks to code-tree
         for nline,tree_vargs in reversed(tree_adds):
             id_item = tree_proc(self.h_tree, TREE_ITEM_ADD, image_index=self._bm_im_ind,  **tree_vargs)
-            tree_proc(self.h_tree, TREE_ITEM_SET_RANGE,  id_item=id_item,  text=(0,nline, 1,nline))
+            rng = (0, nline, ed.get_line_len(nline), nline)
+            tree_proc(self.h_tree, TREE_ITEM_SET_RANGE,  id_item=id_item, text=rng)
 
 
     def _clear_my_tree_stuff(self, id_parent=0):

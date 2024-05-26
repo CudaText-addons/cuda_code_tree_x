@@ -1,2 +1,5 @@
+2024.05.26
+- fix: set range for bookmark until line end, so code-tree auto-sync can find bookmark nodes
+
 2023.05.25
 * removed option 'icon', since full path of icon is bad in sync'ed CudaText config on 2 PCs
