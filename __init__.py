@@ -1,13 +1,9 @@
 import os
 from contextlib import contextmanager
-
 from cudatext import *
 
-
 fn_config = os.path.join(app_path(APP_DIR_SETTINGS), 'plugins.ini')
-
 CFG_SECTION = 'code_tree_x'
-
 opt_fn_icon   = os.path.join(os.path.dirname(__file__), 'icon.png')
 
 
@@ -115,11 +111,11 @@ class Command:
         """ for every tree item yields a tuple:
                 (item id,  item range,  index in parent,  level in tree:0)
         """
-        items = tree_proc(self.h_tree, TREE_ITEM_ENUM, id_item=id_parent) # [(id_item, name), ...]
+        items = tree_proc(self.h_tree, TREE_ITEM_ENUM_EX, id_item=id_parent) # [ {'id':id, 'text':text}, ...]
         if not items:   return
 
         for i,item in enumerate(items):
-            id_item = item[0]
+            id_item = item['id']
             range_ = tree_proc(self.h_tree, TREE_ITEM_GET_RANGE, id_item=id_item)
             if range_[0] != -1:
                 yield (id_parent, range_, i, level)
