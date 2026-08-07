@@ -54,9 +54,10 @@ class Command:
 
         # gather tree-placement for each bookmark
         tree_adds = []
+        prev_id    = 0
         prev_level = 0
-        for (id_parent, range_, ind, level) in self._get_tree_items():
-            #print(f' tree item: {id_parent, ind, range_, },lvl:{prev_level}>{level}')
+        for (id_parent, id_item, range_, ind, level) in self._get_tree_items():
+            #print(f' tree item: {id_parent, id_item, ind, range_, },lvl:{prev_level}>{level}')
             while bookmarks:
                 if range_[1] >= bookmarks[0]['line']:
                     bmdict = bookmarks.pop(0)
@@ -67,14 +68,23 @@ class Command:
                     line_txt = ed.get_text_substr(0,nline, 128,nline).strip()
 
                     if prev_level == level:     # same level
+                        # next tree-item is a sibling of the previous one;
+                        # the bookmark belongs to the previous item's parent,
+                        # inserted right before the current sibling.
                         i_id_parent = id_parent
                         i_ind = ind
                     elif prev_level < level:    # gone deeper
+                        # next tree-item is a child of the previous one;
+                        # bookmark becomes previous item's first child.
                         i_id_parent = id_parent
                         i_ind = 0
-                    else:                       # gone up a lavel
-                        i_id_parent = id_parent
-                        i_ind = ind
+                    else:                       # gone up a level
+                        # next tree-item is shallower; the bookmark line falls
+                        # *inside* the previous (deeper) tree-item's range, so
+                        # it must be appended as a *child* of that previous
+                        # item, not as a sibling of the next shallower item.
+                        i_id_parent = prev_id
+                        i_ind = 0
 
                     #print(f'    + adding: {i_ind, i_id_parent} :: {line_txt}')
                     _vargs = {'id_item':i_id_parent,  'text':line_txt,  'index':i_ind}
@@ -84,6 +94,7 @@ class Command:
 
             if not bookmarks:   break
 
+            prev_id    = id_item
             prev_level = level
         #end for
 
@@ -109,7 +120,7 @@ class Command:
 
     def _get_tree_items(self, id_parent=0, level=0):
         """ for every tree item yields a tuple:
-                (item id,  item range,  index in parent,  level in tree:0)
+                (parent id, item id, item range, index in parent, level in tree:0)
         """
         items = tree_proc(self.h_tree, TREE_ITEM_ENUM_EX, id_item=id_parent) # [ {'id':id, 'text':text}, ...]
         if not items:   return
@@ -118,9 +129,9 @@ class Command:
             id_item = item['id']
             range_ = tree_proc(self.h_tree, TREE_ITEM_GET_RANGE, id_item=id_item)
             if range_[0] != -1:
-                yield (id_parent, range_, i, level)
+                yield (id_parent, id_item, range_, i, level)
 
             yield from self._get_tree_items(id_item, level+1)
 
         if id_parent == 0:  # last - fake item - to place bookmarks beyond real last item
-            yield (0, (0,2**30, 0,2**30), len(items), 0)
+            yield (0, 0, (0,2**30, 0,2**30), len(items), 0)
