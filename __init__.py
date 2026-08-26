@@ -37,6 +37,7 @@ class Command:
     def on_state(self, ed_self, state):
         if state == APPSTATE_CODETREE_AFTER_FILL:
             with lock_tree(self.h_tree):
+                self._clear_my_tree_stuff()
                 self._fill_tree()
 
     def on_state_ed(self, ed_self, state):
@@ -108,8 +109,12 @@ class Command:
     def _clear_my_tree_stuff(self, id_parent=0):
         """ remove all code-tree items with image=`_bm_im_ind`
         """
+        if self._bm_im_ind is None:
+            return
+
         items = tree_proc(self.h_tree, TREE_ITEM_ENUM_EX, id_item=id_parent) # [(id_item, name), ...]
-        if not items:   return
+        if not items:
+            return
 
         for item in items:
             if item['img'] == self._bm_im_ind:
