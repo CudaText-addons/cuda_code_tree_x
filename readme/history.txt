@@ -1,3 +1,6 @@
+2026.08.26
+- fix: duplicated code-tree nodes (with bookmarks) after focusing another ui-tab and focusing back (@Alexey-T)
+
 2026.08.23
 - fix: bookmarks placed after e.g. "# 1.1.1" and before "# 2" - gave wrong icon position in the code-tree (fixed by @badrelmers and AI)
 
